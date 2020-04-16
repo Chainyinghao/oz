@@ -7,15 +7,12 @@ FROM centos:7
 MAINTAINER Dyh
 
 LABEL description="The image is used for oz which makes mirrors and bases on centos7" \
-      org.label-schema.build-date="20200415" \
-      version="1.0"
+      org.label-schema.build-date="20200416" \
+      version="1.1"
 
 RUN yum install -y epel-release wget net-tools
 RUN yum install -y libguestfs-tools  oz
 RUN sed -i -e "s/raw/qcow2/g" -e "s/# cpus = 1/cpus = 2/g" -e "s/# memory = 1024/memory = 2048/g" /etc/oz/oz.cfg
-
-#VOLUME ["/var/lib/libvirt/images/", "/var/lib/oz/screenshots/"]
-
 
 CMD /usr/sbin/init
 
