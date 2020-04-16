@@ -1,0 +1,50 @@
+<template>
+   <name>centos7.5_x86_64</name>
+   <description>CentOS 7.5 x86_64 template</description>
+   <os>
+       <name>RHEL-7</name>
+       <version>5</version>
+       <arch>x86_64</arch>
+       <rootpw>!QAZ2wsx</rootpw>
+       <install type='iso'>
+           <iso>file:///etc/oz/ISO/CentOS-7-x86_64-Minimal-1804_2.iso</iso>
+       </install>
+   </os>
+   <disk>
+       <size>5</size>
+   </disk>
+  <files>
+       <file name='/etc/hosts'>
+           127.0.0.1     localhost
+           ::1           localhost
+       </file>
+  </files>
+  <packages>
+       <package name='epel-release'/>
+       <package name='cloud-utils-growpart'/>
+       <package name='cloud-init'/>
+       <package name='acpid'/>
+       <package name='qemu-guest-agent'/>
+  </packages>
+  <commands>
+       <command name='ssh'>
+           sed -i 's/#PermitRootLogin .*/PermitRootLogin yes/g' /etc/ssh/sshd_config
+           sed -i 's/#UseDNS .*/UseDNS no/g' /etc/ssh/sshd_config
+           systemctl restart sshd
+       </command>
+       <command name='console'>
+           sed -i 's/ quiet/ quiet console=tty0 console=ttyS0,115200n8/g' /etc/default/grub
+           grub2-mkconfig -o /boot/grub2/grub.cfg
+       </command>
+       <command name='update'>
+           echo 'TYPE=Ethernet' > /etc/sysconfig/network-scripts/ifcfg-eth0
+           echo 'DEVICE=eth0' >> /etc/sysconfig/network-scripts/ifcfg-eth0
+           echo 'ONBOOT=yes' >> /etc/sysconfig/network-scripts/ifcfg-eth0
+           echo 'BOOTPROTO=dhcp' >> /etc/sysconfig/network-scripts/ifcfg-eth0
+           echo 'NM_CONTROLLED=no' >> /etc/sysconfig/network-scripts/ifcfg-eth0
+           echo -n > /etc/udev/rules.d/70-persistent-net.rules
+           echo -n > /lib/udev/rules.d/75-persistent-net-generator.rules
+           echo "NOZEROCONF=yes" >> /etc/sysconfig/network
+       </command>
+  </commands>
+</template>
