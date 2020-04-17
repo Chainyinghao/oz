@@ -5,7 +5,7 @@ echo -e "\e[35m ------Install Docker------ \e[0m"
 rpm -q docker-ce
 TAG=`echo $?`
 DIR=`pwd`
-DOCKER_IMAGE=${DIR}/images/docker_images/oz_image.tar
+DOCKER_IMAGE=${DIR}/images/docker_images/oz_centos.tar
 STATUS=$(systemctl status docker | grep Active | awk '{print $2}')
 if [[ $TAG -eq 1 ]];then
     yum install -y yum-utils device-mapper-persistent-data lvm2
