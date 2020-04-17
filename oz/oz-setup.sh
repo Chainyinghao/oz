@@ -1,8 +1,9 @@
 #/bin/bash
 
+echo -e "\e[35m ------Install Docker------ \e[0m"
+
 rpm -q docker-ce
 TAG=`echo $?`
-
 DIR=`pwd`
 DOCKER_IMAGE=${DIR}/images/docker_images/oz_image.tar
 STATUS=$(systemctl status docker | grep Active | awk '{print $2}')
@@ -17,8 +18,10 @@ if [[ ${STATUS} != "active" ]];then
     systemctl start docker
 fi
 
+echo -e "\e[35m ------Load OZ Image------ \e[0m"
 docker load --input $DOCKER_IMAGE
 
+echo -e "\e[35m ------Run OZ Container------ \e[0m"
 VERSION=`docker images | grep oz_centos|awk '{print $2}'`
 docker run -d --name oz_centos -it --privileged=true \
            -v ${DIR}/logs:/var/lib/oz/screenshots/ \
