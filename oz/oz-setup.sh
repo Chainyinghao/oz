@@ -22,13 +22,13 @@ echo -e "\e[35m ------Load OZ Image------ \e[0m"
 docker load --input $DOCKER_IMAGE
 
 echo -e "\e[35m ------Run OZ Container------ \e[0m"
-VERSION=`docker images | grep oz_centos|awk '{print $2}'`
+VERSION=`docker images | grep oz|awk '{print $2}'`
 docker run -d --name oz_centos -it --privileged=true \
            -v ${DIR}/logs:/var/lib/oz/screenshots/ \
            -v ${DIR}/images/libvirt_images:/var/lib/libvirt/images/ \
            -v ${DIR}/images/ISO/:/etc/oz/ISO \
            -v ${DIR}/ks:/etc/oz/ks \
            -v ${DIR}/tdl:/etc/oz/tdl \
-           oz_centos:${VERSION} /usr/sbin/init
+           nmtrdn/oz:${VERSION} /usr/sbin/init
 
 
