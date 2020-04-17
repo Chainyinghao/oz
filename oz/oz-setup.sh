@@ -7,6 +7,8 @@ DIR=`pwd`
 DOCKER_IMAGE=${DIR}/images/docker_images/oz_image.tar
 STATUS=$(systemctl status docker | grep Active | awk '{print $2}')
 if [[ $TAG -eq 1 ]];then
+    yum install -y yum-utils device-mapper-persistent-data lvm2
+    yum-config-manager --add-repo http://mirrors.aliyun.com/docker-ce/linux/centos/docker-ce.repo
     yum install -y docker-ce
     systemctl enable docker
     systemctl restart docker
