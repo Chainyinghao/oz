@@ -32,5 +32,8 @@ systemctl enable acpid
 sed -i 's/disable_root: .*/disable_root: 0/g' /etc/cloud/cloud.cfg
 sed -i 's/ssh_pwauth: .*/ssh_pwauth: 1/g' /etc/cloud/cloud.cfg
 sed -i 's/name: centos/name: root/g' /etc/cloud/cloud.cfg
+echo "net.ipv6.conf.default.accept_ra = 1" >>/etc/sysctl.conf
+echo "net.ipv6.conf.all.accept_ra = 1" >>/etc/sysctl.conf
+echo "net.ipv6.conf.eth0.accept_ra = 1" >>/etc/sysctl.conf
 
 %end

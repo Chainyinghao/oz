@@ -46,5 +46,8 @@
            echo -n > /lib/udev/rules.d/75-persistent-net-generator.rules
            echo "NOZEROCONF=yes" >> /etc/sysconfig/network
        </command>
+       <command name='clear-logs'>
+           rm -rf /root/*
+       </command>
   </commands>
 </template>
