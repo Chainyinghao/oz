@@ -25,6 +25,7 @@
   <packages>
        <package name='epel-release'/>
        <package name='cloud-init'/>
+       <package name='parted'/>
        <package name='acpid'/>
        <package name='qemu-guest-agent'/>
   </packages>
