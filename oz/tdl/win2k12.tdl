@@ -1,0 +1,17 @@
+<template>
+  <name>win2k12</name>
+  <os>
+    <name>Windows</name>
+    <version>2012</version>
+    <arch>x86_64</arch>
+    <install type='iso'>
+      <iso>file:///etc/oz/ISO/SW_DVD5_Windows_Svr_Std_and_DataCtr_2012_R2_64Bit_ChnSimp_Core_MLF_X19-05177.ISO</iso>
+    </install>
+    <key>1111</key>
+  </os>
+  <disk>
+    <size>50</size>
+  </disk>
+  <description>Windows Server 2012</description>
+</template>
+
