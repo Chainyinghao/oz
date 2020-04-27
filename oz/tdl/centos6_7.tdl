@@ -7,7 +7,7 @@
        <arch>x86_64</arch>
        <rootpw>!QAZ2wsx</rootpw>
        <install type='iso'>
-           <iso>file:///etc/oz/centos7_5/CentOS-6.7-x86_64-minimal.iso</iso>
+           <iso>file:///etc/oz/ISO/CentOS-6.7-x86_64-minimal.iso</iso>
        </install>
    </os>
    <disk>
