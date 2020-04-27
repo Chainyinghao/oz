@@ -22,11 +22,12 @@
         <command name='install_qga'>
              dpkg -i /root/qemu-guest-agent_2.5+dfsg-5ubuntu10_amd64.deb
         </command>        
-        <!--<command name='console'>
-             sed -i 's/splash//g' /etc/default/grub
-             sed -i 's/quiet/console=ttyS0/g' /etc/default/grub
+        <command name='console'>
+             sed -i "s/GRUB_CMDLINE_LINUX_DEFAULT=\"console=tty0 .*\"/GRUB_CMDLINE_LINUX=\"console=tty0 console=ttyS0,115200 no_timer_check nofb nomodeset\"/g" /etc/default/grub 
              /usr/sbin/update-grub
-        </command>-->
+             echo "4 4 1 7" > /proc/sys/kernel/printk
+             sysctl kernel.printk
+        </command>
         
         <command name='packages'>
              apt-get clean
@@ -38,11 +39,17 @@
         <command name='modify'>
              echo -n > /etc/udev/rules.d/70-persistent-net.rules
              echo -n > /lib/udev/rules.d/75-persistent-net-generator.rules
+             sed -i "s/PASS_MIN_LEN .*/PASS_MIN_LEN 8/g" /etc/login.defs
              sed -i 's/#PermitRootLogin .*/PermitRootLogin yes/g' /etc/ssh/sshd_config
              sed -i 's/#UseDNS .*/UseDNS no/g' /etc/ssh/sshd_config
              service ssh restart
         </command>
         
+        <command name='cloud-init'>
+             sed -i 's/disable_root: .*/disable_root: false/g' /etc/cloud/cloud.cfg
+             sed -i 's/name: .*/name: root/g' /etc/cloud/cloud.cfg
+             sed -i '/^ssh_pwauth:/d' /etc/cloud/cloud.cfg
+        </command>
         <command name='services'>
              ufw disable
         </command>

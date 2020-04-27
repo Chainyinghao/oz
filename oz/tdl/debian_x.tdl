@@ -44,6 +44,7 @@
         <command name='modify'>
           echo -n > /etc/udev/rules.d/70-persistent-net.rules
           echo -n > /lib/udev/rules.d/75-persistent-net-generator.rules
+          sed -i "s/PASS_MIN_LEN .*/PASS_MIN_LEN 8/g" /etc/login.defs
           sed -i 's/#PermitRootLogin .*/PermitRootLogin yes/g' /etc/ssh/sshd_config
           sed -i 's/#UseDNS .*/UseDNS no/g' /etc/ssh/sshd_config
           systemctl restart sshd
