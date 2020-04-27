@@ -1,13 +1,13 @@
 <template>
-   <name>centos7.5_x86_64</name>
-   <description>CentOS 7.5 x86_64 template</description>
+   <name>centos6.7_x86_64</name>
+   <description>CentOS 6.7 x86_64 template</description>
    <os>
-       <name>RHEL-7</name>
-       <version>5</version>
+       <name>RHEL-6</name>
+       <version>7</version>
        <arch>x86_64</arch>
        <rootpw>!QAZ2wsx</rootpw>
        <install type='iso'>
-           <iso>file:///etc/oz/ISO/CentOS-7-x86_64-Minimal-1804_2.iso</iso>
+           <iso>file:///etc/oz/centos7_5/CentOS-6.7-x86_64-minimal.iso</iso>
        </install>
    </os>
    <disk>
@@ -18,10 +18,12 @@
            127.0.0.1     localhost
            ::1           localhost
        </file>
+       <file name="/root/linux-rootfs-resize.tar.gz" type="url">
+           file:///etc/oz/data/linux-rootfs-resize.tar.gz
+       </file>
   </files>
   <packages>
        <package name='epel-release'/>
-       <package name='cloud-utils-growpart'/>
        <package name='cloud-init'/>
        <package name='acpid'/>
        <package name='qemu-guest-agent'/>
@@ -30,12 +32,12 @@
        <command name='ssh'>
            sed -i 's/#PermitRootLogin .*/PermitRootLogin yes/g' /etc/ssh/sshd_config
            sed -i 's/#UseDNS .*/UseDNS no/g' /etc/ssh/sshd_config
-           systemctl restart sshd
+           service sshd restart
        </command>
+       <!-- 
        <command name='console'>
-           sed -i 's/ quiet/ quiet console=tty0 console=ttyS0,115200n8/g' /etc/default/grub
-           grub2-mkconfig -o /boot/grub2/grub.cfg
-       </command>
+           sed -i "s/kernel.*/& console=tty0 console=ttyS0,115200n8/g" /boot/grub/menu.lst
+       </command>-->
        <command name='network'>
            echo 'TYPE=Ethernet' > /etc/sysconfig/network-scripts/ifcfg-eth0
            echo 'DEVICE=eth0' >> /etc/sysconfig/network-scripts/ifcfg-eth0
@@ -55,6 +57,15 @@
            echo "net.ipv6.conf.eth0.accept_ra = 1" >>/etc/sysctl.conf
            echo "net.ipv6.conf.eth1.accept_ra = 1" >>/etc/sysctl.conf
            sed -i "s/PASS_MIN_LEN .*/PASS_MIN_LEN 8/g" /etc/login.defs
+       </command>
+       <command name='install_linux_root_resize'>
+           sed -i -e "s/#baseurl/baseurl/g" -e "s/mirrorlist/#mirrorlist/g" /etc/yum.repos.d/epel.repo
+           yum clean all
+           yum install -y cloud-utils-growpart
+           cd /root
+           tar -zxvf linux-rootfs-resize.tar.gz
+           cd linux-rootfs-resize
+           ./install
        </command>
        <command name='clear-log'>
            rm -rf /root/*

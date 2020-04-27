@@ -11,19 +11,18 @@ selinux --disabled
 services --disabled="kdump"
 timezone --utc Asia/Shanghai
 bootloader --location=mbr --append="console=tty0 console=ttyS0,115200"
-
 zerombr
 clearpart --all 
-part / --fstype xfs --size=4096 --grow 
+part / --fstype ext4 --size=4096 --grow 
 
 reboot
 
-%packages
+%packages --nobase --excludedocs
 openssh-clients
-@^minimal
-@core
+#@core
 %end
 
 %post
-systemctl enable acpid
+chkconfig on acpid
+
 %end
