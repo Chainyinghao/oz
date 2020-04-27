@@ -27,6 +27,7 @@ docker run -d --name oz_centos -it --privileged=true \
            -v ${DIR}/logs:/var/lib/oz/screenshots/ \
            -v ${DIR}/images/libvirt_images:/var/lib/libvirt/images/ \
            -v ${DIR}/images/ISO/:/etc/oz/ISO \
+           -v ${DIR}/data/:/etc/oz/data \
            -v ${DIR}/ks:/etc/oz/ks \
            -v ${DIR}/tdl:/etc/oz/tdl \
            nmtrdn/oz:${VERSION} /usr/sbin/init
