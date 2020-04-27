@@ -1,0 +1,84 @@
+<template>
+    <name>Debian8</name>
+    <os>
+        <name>Debian</name>
+        <version>8</version>
+        <arch>x86_64</arch>
+        <install type='iso'>
+            <iso>file:///etc/oz/centos7_5/debian-8.11.1-amd64-netinst.iso</iso>
+        </install>
+        <rootpw>!QAZ2wsx</rootpw>
+    </os>
+    <disk>
+      <size>5</size>
+    </disk>
+    <description>Debian8 x86_64</description>
+    <files>
+        <file name='/root/qemu-guest-agent_2.5+dfsg-5ubuntu10_amd64.deb' type="url">
+          file:///etc/oz/data/qemu-guest-agent_2.5+dfsg-5ubuntu10_amd64.deb
+        </file>
+    </files>
+    <commands>
+        <command name='install_qga'>
+          apt-get -i /root/qemu-guest-agent_2.5+dfsg-5ubuntu10_amd64.deb
+        </command>
+        <command name='console'>
+          sed -i 's/splash//g' /etc/default/grub
+          sed -i 's/quiet/console=ttyS0/g' /etc/default/grub
+          /usr/sbin/update-grub
+        </command>
+         
+        <command name='packages'>
+          apt-get clean;apt-get update
+          apt-get -y install wget vim iputils-ping cron at
+        </command>
+        <command name='cloud-init'>
+          apt-get -y install acpid cloud-init-* cloud-utils
+          sed -i 's/disable_root: .*/disable_root: false/g' /etc/cloud/cloud.cfg
+          sed -i 's/name: .*/name: root/g' /etc/cloud/cloud.cfg
+          sed -i '/^ssh_pwauth:/d' /etc/cloud/cloud.cfg
+          sed -i "s/^datasource_list/#datasource_list/g" /etc/cloud/cloud.cfg.d/90_dpkg.cfg
+          echo "datasource_list: [ ConfigDrive, Ec2, MAAS, OVF, GCE, None ]" >> /etc/cloud/cloud.cfg.d/90_dpkg.cfg
+        </command> 
+        
+        <command name='modify'>
+          echo -n > /etc/udev/rules.d/70-persistent-net.rules
+          echo -n > /lib/udev/rules.d/75-persistent-net-generator.rules
+          sed -i 's/#PermitRootLogin .*/PermitRootLogin yes/g' /etc/ssh/sshd_config
+          sed -i 's/#UseDNS .*/UseDNS no/g' /etc/ssh/sshd_config
+          systemctl restart sshd
+
+        </command>
+         
+        <command name='services'>
+          systemctl enable acpid
+        </command>
+         
+        <command name='clear-logs'>
+          rm -rf /root/*
+          rm -f /var/log/*.old
+          rm -f /tmp/cron.rule
+          rm -f /root/.ssh/authorized_keys
+          rm -rf /root/.ssh/known_hosts
+          rm -rf /etc/ssh/ssh_host_*
+          rm -rf /var/lib/cloud/instances/*
+          rm -rf /tmp/systemd-private*
+          rm -rf /tmp/tmp.*
+          rm -rf /etc/udev/rules.d/*
+          rm -rf /var/lib/cloud/instances/*
+          rm -rf /root/inst-sys
+          rm -rf /root/.cache
+          rm -rf /root/.lesshst /root/*.tmp
+          rm -rf /home/*
+
+          ls -lSr /var/log
+          echo > /root/.viminfo
+          find /var/log/ -name "*.gz" | xargs rm -rf
+          find /var/log/ -type f |xargs -i -t cp /dev/null {}
+
+          history -w
+          echo > .bash_history
+          history -c
+        </command>
+    </commands>
+</template>
